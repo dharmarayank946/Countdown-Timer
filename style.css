@@ -1,0 +1,618 @@
+/* ==========================================================================
+   VEDA TECHNOLOGY WEB DEVELOPMENT INTERNSHIP — TASK 13
+   Project: Countdown Timer
+   Theme: Light Teal and Pearl-White Palette
+   Palette Definitions:
+     - Background:     #F4FBFC (Soft Pearl Teal Tint)
+     - Primary Teal:   #287D85 (Rich Teal)
+     - Light Accent:   #DDF2F1 (Soft Mint Accent)
+     - Main Text:      #243B40 (Deep Teal Slate)
+     - Secondary Text: #71868A (Muted Teal Grey)
+     - Card Background:#FFFFFF (Crisp Pearl White)
+     - Border Color:   #D7E9E9 (Clean Structural Border)
+   ========================================================================== */
+
+:root {
+  --bg-primary: #F4FBFC;
+  --primary-teal: #287D85;
+  --primary-teal-hover: #1f646a;
+  --primary-teal-active: #174e53;
+  --light-accent: #DDF2F1;
+  --light-accent-hover: #c9e9e7;
+  --main-text: #243B40;
+  --secondary-text: #71868A;
+  --card-bg: #FFFFFF;
+  --border-color: #D7E9E9;
+  --border-color-focus: #287D85;
+
+  /* Status Colors */
+  --status-active-bg: #DDF2F1;
+  --status-active-text: #287D85;
+  --status-complete-bg: #E8F8F5;
+  --status-complete-text: #1B7A68;
+
+  /* Typography */
+  --font-family-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  /* Shadows - subtle, no heavy drop shadows */
+  --shadow-sm: 0 2px 8px rgba(40, 125, 133, 0.05);
+  --shadow-md: 0 8px 24px rgba(40, 125, 133, 0.07);
+  --shadow-hover: 0 12px 28px rgba(40, 125, 133, 0.12);
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.18s ease;
+  --transition-normal: 0.28s ease;
+}
+
+/* --------------------------------------------------------------------------
+   CSS Reset & Base Setup
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--bg-primary);
+  color: var(--main-text);
+  font-family: var(--font-family-sans);
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.25rem;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* --------------------------------------------------------------------------
+   Ambient Decorative Accents (Soft & Subtle)
+   -------------------------------------------------------------------------- */
+.ambient-glow {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(80px);
+  opacity: 0.55;
+}
+
+.glow-top {
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 480px;
+  height: 280px;
+  background-color: var(--light-accent);
+}
+
+.glow-bottom {
+  bottom: -150px;
+  right: 10%;
+  width: 400px;
+  height: 260px;
+  background-color: var(--light-accent);
+}
+
+/* --------------------------------------------------------------------------
+   Application Wrapper
+   -------------------------------------------------------------------------- */
+.app-wrapper {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 820px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   Header Section
+   -------------------------------------------------------------------------- */
+.app-header {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.main-heading {
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  font-weight: 800;
+  color: var(--main-text);
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.subtitle {
+  font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+  color: var(--secondary-text);
+  font-weight: 500;
+  max-width: 480px;
+}
+
+/* --------------------------------------------------------------------------
+   Main Card Container
+   -------------------------------------------------------------------------- */
+.main-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: clamp(1.5rem, 4vw, 2.5rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   Timer Metadata Bar (Status Indicator & Target Date Display)
+   -------------------------------------------------------------------------- */
+.timer-meta-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  background-color: var(--status-active-bg);
+  color: var(--status-active-text);
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.status-indicator.complete {
+  background-color: var(--status-complete-bg);
+  color: var(--status-complete-text);
+}
+
+.status-indicator.error {
+  background-color: #FDE8E8;
+  color: #9B1C1C;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background-color: currentColor;
+  border-radius: 50%;
+}
+
+.status-indicator:not(.complete):not(.error) .pulse-dot {
+  box-shadow: 0 0 0 0 rgba(40, 125, 133, 0.7);
+  animation: subtle-pulse 2s infinite ease-out;
+}
+
+.status-indicator.error .pulse-dot {
+  box-shadow: none;
+  animation: none;
+}
+
+@keyframes subtle-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(40, 125, 133, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(40, 125, 133, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(40, 125, 133, 0);
+  }
+}
+
+.target-info {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--secondary-text);
+}
+
+.target-title {
+  font-weight: 500;
+}
+
+.target-value {
+  color: var(--main-text);
+  font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   4 Separate Time Unit Cards Grid
+   -------------------------------------------------------------------------- */
+.timer-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.unit-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Subtle hover effect only */
+.unit-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--primary-teal);
+  box-shadow: var(--shadow-hover);
+}
+
+.unit-value-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 4.5rem;
+}
+
+.unit-number {
+  font-size: clamp(2.35rem, 5.5vw, 3.6rem);
+  font-weight: 800;
+  color: var(--primary-teal);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  letter-spacing: -0.02em;
+}
+
+.unit-label-bar {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border-color);
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.unit-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--secondary-text);
+}
+
+/* --------------------------------------------------------------------------
+   Completion Banner
+   -------------------------------------------------------------------------- */
+.completion-banner {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  background-color: var(--light-accent);
+  border: 1.5px solid var(--primary-teal);
+  border-radius: var(--radius-md);
+  color: var(--main-text);
+  animation: fadeIn var(--transition-normal);
+}
+
+.completion-banner[hidden] {
+  display: none !important;
+}
+
+.completion-icon-wrapper {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  background-color: var(--primary-teal);
+  color: #FFFFFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.completion-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.completion-headline {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--primary-teal);
+  letter-spacing: -0.01em;
+}
+
+.completion-subtext {
+  font-size: 0.9rem;
+  color: var(--main-text);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Controls & Preset Panel (Mobile-Friendly Testing)
+   -------------------------------------------------------------------------- */
+.controls-panel {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.15rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.panel-tag {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--primary-teal);
+  text-transform: uppercase;
+}
+
+.panel-hint {
+  font-size: 0.8rem;
+  color: var(--secondary-text);
+}
+
+.preset-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.65rem;
+}
+
+/* Base Button Styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  min-height: 44px;
+  text-decoration: none;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+  user-select: none;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-primary {
+  background-color: var(--primary-teal);
+  color: #FFFFFF;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-teal-hover);
+}
+
+.btn-secondary {
+  background-color: var(--card-bg);
+  border-color: var(--border-color);
+  color: var(--main-text);
+}
+
+.btn-secondary:hover {
+  background-color: var(--light-accent);
+  border-color: var(--primary-teal);
+  color: var(--primary-teal);
+}
+
+.btn-outline {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--secondary-text);
+}
+
+.btn-outline:hover {
+  background-color: var(--light-accent);
+  border-color: var(--primary-teal);
+  color: var(--primary-teal);
+}
+
+.btn-icon {
+  flex-shrink: 0;
+}
+
+/* Custom Date Picker Form */
+.custom-date-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.custom-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--main-text);
+}
+
+.custom-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  width: 100%;
+}
+
+.date-input {
+  width: 100%;
+  height: 62px;
+  min-height: 60px;
+  max-height: 65px;
+  padding: 0 1rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--main-text);
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  outline: none;
+  color-scheme: light;
+  box-sizing: border-box;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.date-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  font-size: 1.25rem;
+  padding: 0.4rem;
+  margin-right: -0.2rem;
+  opacity: 0.85;
+  border-radius: 4px;
+  transition: opacity var(--transition-fast), background-color var(--transition-fast);
+}
+
+.date-input::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  background-color: var(--light-accent);
+}
+
+.date-input:focus {
+  border-color: var(--border-color-focus);
+  box-shadow: 0 0 0 3px rgba(40, 125, 133, 0.15);
+}
+
+#btn-set-custom {
+  width: 100%;
+  height: 54px;
+  min-height: 52px;
+  max-height: 58px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Design & Media Queries
+   -------------------------------------------------------------------------- */
+
+/* Tablet & Mobile Screens (<= 680px) */
+@media (max-width: 680px) {
+  body {
+    padding: 1.5rem 0.875rem;
+  }
+
+  .main-card {
+    padding: 1.25rem;
+    gap: 1.25rem;
+  }
+
+  /* Switch 4-column row into a clean 2x2 grid */
+  .timer-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.875rem;
+  }
+
+  .unit-card {
+    padding: 1.25rem 0.75rem;
+  }
+
+  .unit-value-container {
+    min-height: 3.5rem;
+  }
+
+  .timer-meta-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.65rem;
+  }
+
+  .preset-buttons {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Small Mobile Screens (<= 380px) */
+@media (max-width: 380px) {
+  .unit-card {
+    padding: 1rem 0.5rem;
+  }
+
+  .unit-number {
+    font-size: 2.1rem;
+  }
+
+  .unit-label {
+    font-size: 0.7rem;
+  }
+
+  .completion-banner {
+    flex-direction: column;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .date-input {
+    padding: 0 0.75rem;
+    font-size: 0.88rem;
+  }
+
+  #btn-set-custom {
+    font-size: 0.88rem;
+  }
+}

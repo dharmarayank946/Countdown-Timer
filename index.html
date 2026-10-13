@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countdown Timer | VEDA Technology Task 13</title>
+  <meta name="description" content="VEDA Technology Web Development Internship Task 13 — Countdown Timer. A clean, modern, and responsive countdown timer built with HTML5, CSS3, and JavaScript in a light teal and pearl-white theme.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Subtle ambient decorative accents (no excessive animation/gradients) -->
+  <div class="ambient-glow glow-top" aria-hidden="true"></div>
+  <div class="ambient-glow glow-bottom" aria-hidden="true"></div>
+
+  <!-- Main Application Wrapper -->
+  <div class="app-wrapper">
+
+    <!-- Header Section -->
+    <header class="app-header">
+      <h1 class="main-heading">Countdown Timer</h1>
+      <p class="subtitle">Every second brings you closer.</p>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="main-card" role="region" aria-label="Countdown Timer Display">
+      
+      <!-- Status Badge & Target Info Header -->
+      <div class="timer-meta-bar">
+        <div class="status-indicator" id="status-indicator">
+          <span class="pulse-dot" aria-hidden="true"></span>
+          <span class="status-label" id="status-label">TIME REMAINING</span>
+        </div>
+        
+        <div class="target-info" id="target-info">
+          <span class="target-title">Target:</span>
+          <span class="target-value" id="target-date-text">Loading target date...</span>
+        </div>
+      </div>
+
+      <!-- 4 Separate Time Unit Sections -->
+      <section class="timer-grid" aria-label="Time units countdown">
+        
+        <!-- Days Card -->
+        <article class="unit-card" id="card-days">
+          <div class="unit-value-container">
+            <span class="unit-number" id="days-val" aria-live="polite">00</span>
+          </div>
+          <div class="unit-label-bar">
+            <span class="unit-label">Days</span>
+          </div>
+        </article>
+
+        <!-- Hours Card -->
+        <article class="unit-card" id="card-hours">
+          <div class="unit-value-container">
+            <span class="unit-number" id="hours-val" aria-live="polite">00</span>
+          </div>
+          <div class="unit-label-bar">
+            <span class="unit-label">Hours</span>
+          </div>
+        </article>
+
+        <!-- Minutes Card -->
+        <article class="unit-card" id="card-minutes">
+          <div class="unit-value-container">
+            <span class="unit-number" id="minutes-val" aria-live="polite">00</span>
+          </div>
+          <div class="unit-label-bar">
+            <span class="unit-label">Minutes</span>
+          </div>
+        </article>
+
+        <!-- Seconds Card -->
+        <article class="unit-card" id="card-seconds">
+          <div class="unit-value-container">
+            <span class="unit-number" id="seconds-val" aria-live="polite">00</span>
+          </div>
+          <div class="unit-label-bar">
+            <span class="unit-label">Seconds</span>
+          </div>
+        </article>
+
+      </section>
+
+      <!-- Completion Banner (Hidden while countdown is active) -->
+      <section class="completion-banner" id="completion-banner" role="alert" aria-live="assertive" hidden>
+        <div class="completion-icon-wrapper" aria-hidden="true">
+          <svg class="completion-icon" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+            <polyline points="22 4 12 14.01 9 11.01"></polyline>
+          </svg>
+        </div>
+        <div class="completion-content">
+          <h2 class="completion-headline">Countdown Complete!</h2>
+          <p class="completion-subtext">The designated target date and time has been reached successfully.</p>
+        </div>
+      </section>
+
+      <!-- Mobile & Phone-Friendly Interactive Test & Date Switcher Panel -->
+      <section class="controls-panel" aria-label="Interactive Controls & Presets">
+        <div class="panel-header">
+          <span class="panel-tag">QUICK PRESETS &amp; TESTING</span>
+          <span class="panel-hint">Test completion without editing code</span>
+        </div>
+
+        <div class="preset-buttons">
+          <button type="button" class="btn btn-secondary" id="btn-preset-10s" title="Set timer to finish in 10 seconds">
+            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span>+10 Seconds (Test Finish)</span>
+          </button>
+
+          <button type="button" class="btn btn-secondary" id="btn-preset-1d" title="Set timer to 24 hours from now">
+            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line>
+              <line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            <span>+1 Day</span>
+          </button>
+
+          <button type="button" class="btn btn-secondary" id="btn-preset-past" title="Set timer to past date to test immediate completion">
+            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="15" y1="9" x2="9" y2="15"></line>
+              <line x1="9" y1="9" x2="15" y2="15"></line>
+            </svg>
+            <span>Past Date (Immediate Complete)</span>
+          </button>
+
+          <button type="button" class="btn btn-outline" id="btn-preset-reset" title="Reset to configured TARGET_DATE variable in script.js">
+            <svg class="btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+            </svg>
+            <span>Reset to Config</span>
+          </button>
+        </div>
+
+        <!-- Custom Target Date Picker Form -->
+        <form class="custom-date-form" id="custom-date-form">
+          <label for="custom-date-input" class="custom-label">Select Custom Target Date &amp; Time:</label>
+          <div class="custom-input-group">
+            <input type="datetime-local" id="custom-date-input" class="date-input" required>
+            <button type="submit" class="btn btn-primary" id="btn-set-custom">
+              <span>Set Target</span>
+            </button>
+          </div>
+        </form>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- JavaScript Logic -->
+  <script src="script.js"></script>
+</body>
+</html>
